@@ -148,7 +148,7 @@
 
 <script>
 document.getElementById('formProduto').addEventListener('submit', function (e) {
-    e.preventDefault(); // impede o envio normal do formulário
+    e.preventDefault();
 
     const form = e.target;
     const formData = new FormData(form);
@@ -157,27 +157,29 @@ document.getElementById('formProduto').addEventListener('submit', function (e) {
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        if (!response.ok) throw new Error('Erro ao salvar');
-        return response.text(); // ou .json() se seu PHP retornar JSON
-    })
+    .then(response => response.json()) // ← AGORA LENDO JSON
     .then(data => {
-        // mostra notificação
+
         const alerta = document.getElementById('notificacao');
         alerta.style.display = 'block';
-        alerta.textContent = 'Produto salvo com sucesso!';
+        alerta.textContent = data.message;
 
-        // limpa os campos
-        form.reset();
+        if (data.success) {
+            alerta.style.background = '#dff0d8';
+            alerta.style.color = '#3c763d';
+            form.reset();
+        } else {
+            alerta.style.background = '#f2dede';
+            alerta.style.color = '#a94442';
+        }
 
-        // esconde a notificação após 3 segundos
         setTimeout(() => {
             alerta.style.display = 'none';
         }, 3000);
     })
     .catch(error => {
-        alert('Erro ao salvar o produto. Verifique os campos e tente novamente.');
-        console.error(error);
+        console.error('Erro:', error);
+        alert('Erro ao salvar o produto.');
     });
 });
 </script>

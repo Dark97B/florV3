@@ -14,6 +14,22 @@ public function criar($dados) {
     require_once __DIR__ . '/../helpers/OrdemGlobal.php';
     $ordem = OrdemGlobal::getProximaOrdem();
 
+if(strlen($dados['numero_pedido']) > 20){
+    throw new Exception("Número do pedido não pode ter mais que 20 caracteres.");
+}
+
+if(strlen($dados['tipo']) > 20){
+    throw new Exception("Tipo não pode ter mais que 20 caracteres.");
+}
+
+if(strlen($dados['vendedor_codigo']) > 20){
+    throw new Exception("Código do vendedor não pode ter mais que 20 caracteres.");
+}
+
+if(strlen($dados['enviar_para']) > 20){
+    throw new Exception("Campo enviar_para não pode ter mais que 20 caracteres.");
+}
+
     $sql = "INSERT INTO {$this->table} 
     (numero_pedido, tipo, remetente, telefone_remetente, destinatario, telefone_destinatario,
      endereco, numero_endereco, bairro, referencia, produtos, adicionais, data_abertura, hora, status, ordem_fila, vendedor_codigo, obs_produto, quantidade, enviar_para, informacao_geral)

@@ -66,7 +66,7 @@ function pode($chave) {
         .tag-tipo{
             display:inline-flex; align-items:center; gap:6px;
             font-weight:700; font-size:11px; line-height:1;
-            padding:3px 8px; border-radius:999px; color:#fff; white-space:nowrap;
+            padding:3px 8px; border-radius:999px; color:#000; white-space:nowrap;
             box-shadow:0 1px 0 rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
             vertical-align:middle; margin-left:6px;
         }

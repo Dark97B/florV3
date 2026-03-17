@@ -28,22 +28,51 @@ class OperadorController {
         require __DIR__ . '/../views/operadores/lista_operadores.php';
     }
 
-public function relatorioOperadores() {
-    require_once __DIR__ . '/../models/ResponsavelProducao.php';
-    $responsavelModel = new ResponsavelProducao();
+    public function relatorioOperadores() {
+        require_once __DIR__ . '/../models/ResponsavelProducao.php';
+        $responsavelModel = new ResponsavelProducao();
 
-    $dataInicio = $_GET['data_inicio'] ?? '';
-    $dataFim = $_GET['data_fim'] ?? '';
-    $resultados = [];
+        $dataInicio = $_GET['data_inicio'] ?? '';
+        $dataFim = $_GET['data_fim'] ?? '';
+        $resultados = [];
 
-    if ($dataInicio && $dataFim) {
-        $resultados = $responsavelModel->listarPorPeriodo($dataInicio, $dataFim);
+        if ($dataInicio && $dataFim) {
+            $resultados = $responsavelModel->listarPorPeriodo($dataInicio, $dataFim);
+        }
+
+        require __DIR__ . '/../views/operadores/relatorio_operadores.php';
     }
 
-    require __DIR__ . '/../views/operadores/relatorio_operadores.php';
+
+    
+    public function detalhesOperador() {
+        require_once __DIR__ . '/../models/ResponsavelProducao.php';
+        $model = new ResponsavelProducao();
+
+        $responsavel = $_GET['responsavel'] ?? '';
+        $tipo = $_GET['tipo'] ?? '';
+        $inicio = $_GET['data_inicio'] ?? '';
+        $fim = $_GET['data_fim'] ?? '';
+
+        $pedidos = $model->listarDetalhes($responsavel, $tipo, $inicio, $fim);
+
+        require __DIR__ . '/../views/operadores/detalhes_operador.php';
+    }
+
+public function detalhamento()
+{
+    $responsavel = $_GET['responsavel'] ?? '';
+    $tipo = $_GET['tipo'] ?? 'produzido';
+
+    $model = new ResponsavelProducao();
+
+    if ($tipo == 'cancelado') {
+        $pedidos = $model->buscarCanceladosPorResponsavel($responsavel);
+    } else {
+        $pedidos = $model->buscarProduzidosPorResponsavel($responsavel);
+    }
+
+    require __DIR__ . '/../views/relatorios/detalhamento.php';
 }
-
-
-
 
 }

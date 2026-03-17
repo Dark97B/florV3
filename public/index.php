@@ -300,6 +300,21 @@ case 'salvar-edicao-usuario':
     break;
 
 
+
+case 'detalhamento':
+    require_once __DIR__ . '/../app/controllers/RelatorioController.php';
+    $controller = new RelatorioController();
+    $controller->detalhamento();
+break;
+
+
+case 'detalhes-operador':
+    require_once __DIR__ . '/../app/controllers/OperadorController.php';
+    $controller = new OperadorController();
+    $controller->detalhesOperador();
+    break;
+
+    
     // ---------- Default ----------
     default:
         echo "Página não encontrada.";

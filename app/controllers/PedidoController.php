@@ -67,43 +67,42 @@ private function normalizaStatus($s) {
         require __DIR__ . '/../views/pedidos/cadastrar_retirada.php';
     }
 
-    public function salvarEntrega() {
 
-    
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $dados = $_POST;
 
-            // Formata produtos ( "qtd x nome (obs)" )
-            if (isset($dados['produtos']) && is_array($dados['produtos'])) {
-                $itens = [];
-                foreach ($dados['produtos'] as $p) {
-                    $nome = $p['nome'] ?? '';
-                    $qtd  = $p['quantidade'] ?? '1';
-                    $obs  = trim($p['observacao'] ?? '');
-                    $itens[] = $qtd . ' x ' . $nome . ($obs ? " ($obs)" : '');
-                }
-                $dados['produtos'] = implode(', ', $itens);
+public function salvarEntrega() {
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $dados = $_POST;
+
+        if (isset($dados['produtos']) && is_array($dados['produtos'])) {
+            $itens = [];
+            foreach ($dados['produtos'] as $p) {
+                $nome = $p['nome'] ?? '';
+                $qtd  = $p['quantidade'] ?? '1';
+                $obs  = trim($p['observacao'] ?? '');
+                $itens[] = $qtd . ' x ' . $nome . ($obs ? " ($obs)" : '');
             }
-
-            // Status inicial conforme seleção
-            $env = $_POST['enviar_para'] ?? null;
-            $dados['enviar_para'] = $env;
-            $dados['status'] = ($env === 'pronta_entrega') ? 'Pronto' : 'Pendente';
-
-            // Salva
-            $model = new PedidoEntrega();
-            $id = $model->criar($dados);
-
-            // Impressão opcional (NÃO muda status aqui)
-            $desejaImprimir = isset($_POST['imprimir']) && $_POST['imprimir'] == '1';
-            if ($desejaImprimir) {
-                header("Location: /florV3/public/index.php?rota=imprimir-cupom-cliente&id={$id}&tipo=entrega");
-            } else {
-                header('Location: /florV3/public/index.php?rota=painel&sucesso=1');
-            }
-            exit;
+            $dados['produtos'] = implode(', ', $itens);
         }
+
+        $env = $_POST['enviar_para'] ?? null;
+        $dados['enviar_para'] = $env;
+        $dados['status'] = ($env === 'pronta_entrega') ? 'Pronto' : 'Pendente';
+
+        $model = new PedidoEntrega();
+        $id = $model->criar($dados);
+
+        $desejaImprimir = isset($_POST['imprimir']) && $_POST['imprimir'] == '1';
+
+        if ($desejaImprimir) {
+            header("Location: /florV3/public/index.php?rota=imprimir-cupom-cliente&id={$id}&tipo=entrega");
+        } else {
+            header('Location: /florV3/public/index.php?rota=painel&sucesso=1');
+        }
+
+        exit;
     }
+}
 
     public function salvarRetirada() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -697,5 +696,6 @@ public function buscarPedidosAtendenteJson() {
     echo json_encode(array_values($todos), JSON_UNESCAPED_UNICODE);
     exit;
 }
+
 
 }
